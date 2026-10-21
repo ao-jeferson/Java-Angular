@@ -1,0 +1,9 @@
+spring:
+  config:
+    import: "configserver:"
+  cloud:
+    config:
+      enabled: true
+      uri: ${CONFIG_SERVER_URL:http://127.0.0.1:8888}
+      username: ${CONFIG_SERVER_USERNAME:config}
+      password: ${CONFIG_SERVER_PASSWORD}
