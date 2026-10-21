@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnChanges, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Competencia, Produto, Cosif, NovoMovimento } from '../models/movimento';
+import { MESES, ANOS } from '../models/competencia-opcoes';
 @Component({
   selector: 'app-movimento-form',
   imports: [ReactiveFormsModule],
@@ -8,11 +9,19 @@ import { Competencia, Produto, Cosif, NovoMovimento } from '../models/movimento'
     <div class="form-grid">
       <div>
         <label for="mes">Mês</label
-        ><input id="mes" type="number" formControlName="mes" min="1" max="12" />
+        ><select id="mes" formControlName="mes">
+          @for (mes of meses; track mes) {
+            <option [ngValue]="mes">{{ mes.toString().padStart(2, '0') }}</option>
+          }
+        </select>
       </div>
       <div>
         <label for="ano">Ano</label
-        ><input id="ano" type="number" formControlName="ano" min="1" max="9999" />
+        ><select id="ano" formControlName="ano">
+          @for (ano of anos; track ano) {
+            <option [ngValue]="ano">{{ ano }}</option>
+          }
+        </select>
       </div>
       <div>
         <label for="produto">Produto</label
@@ -40,6 +49,9 @@ import { Competencia, Produto, Cosif, NovoMovimento } from '../models/movimento'
           inputmode="decimal"
           placeholder="150,00"
           aria-describedby="valor-help"
+          (beforeinput)="beforeValor($event)"
+          (paste)="pasteValor($event)"
+          (input)="inputValor($event)"
         /><small id="valor-help">Até duas casas decimais, sem separador de milhar.</small>
       </div>
       <div>
@@ -89,6 +101,10 @@ export class MovimentoForm implements OnChanges {
   @Output() readonly incluir = new EventEmitter<NovoMovimento>();
   @Output() readonly novo = new EventEmitter<void>();
   @Output() readonly produtoChange = new EventEmitter<string>();
+  readonly meses = MESES;
+  readonly anos = ANOS;
+  private lastValor = '';
+  private readonly decimalParcial = /^-?[0-9]{0,16}([,.][0-9]{0,2})?$/;
   invalid = false;
   readonly form = this.fb.nonNullable.group({
     mes: [
@@ -125,6 +141,7 @@ export class MovimentoForm implements OnChanges {
   }
   limpar() {
     this.invalid = false;
+    this.lastValor = '';
     this.form.reset({
       mes: this.competencia.mes,
       ano: this.competencia.ano,
@@ -138,6 +155,35 @@ export class MovimentoForm implements OnChanges {
   changeProduto() {
     this.form.controls.codigoCosif.setValue('');
     this.produtoChange.emit(this.form.controls.codigoProduto.value);
+  }
+  beforeValor(event: Event) {
+    const input = event as InputEvent;
+    if (input.data !== null && !this.valorPermitido(event.target as HTMLInputElement, input.data))
+      event.preventDefault();
+  }
+  pasteValor(event: ClipboardEvent) {
+    if (
+      !this.valorPermitido(
+        event.target as HTMLInputElement,
+        event.clipboardData?.getData('text') ?? '',
+      )
+    )
+      event.preventDefault();
+  }
+  private valorPermitido(input: HTMLInputElement, texto: string) {
+    return this.decimalParcial.test(
+      input.value.slice(0, input.selectionStart ?? input.value.length) +
+        texto +
+        input.value.slice(input.selectionEnd ?? input.value.length),
+    );
+  }
+  inputValor(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (this.decimalParcial.test(input.value)) this.lastValor = input.value;
+    else {
+      input.value = this.lastValor;
+      this.form.controls.valor.setValue(this.lastValor);
+    }
   }
   submit() {
     if (!this.editing || this.saving || this.loadingCosifs) return;

@@ -266,7 +266,8 @@ small {
   font-size: 11px;
   color: var(--muted);
 }
-.filter-form input {
+.filter-form input,
+.filter-form select {
   display: block;
   min-height: 35px;
   padding: 6px 10px;

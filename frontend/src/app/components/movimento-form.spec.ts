@@ -41,3 +41,18 @@ describe('Formulário de movimento', () => {
     expect(component.form.enabled).toBe(true);
   });
 });
+
+describe('Campos numéricos', () => {
+  it('rejeita letras e recupera o valor anterior sem converter texto em outro número', () => {
+    const fixture = TestBed.createComponent(MovimentoForm);
+    fixture.componentRef.setInput('editing', true);
+    fixture.detectChanges();
+    const input = fixture.nativeElement.querySelector('#valor') as HTMLInputElement;
+    input.value = '12,34';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.value = '12e34';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    expect(input.value).toBe('12,34');
+    expect(fixture.componentInstance.form.controls.valor.value).toBe('12,34');
+  });
+});

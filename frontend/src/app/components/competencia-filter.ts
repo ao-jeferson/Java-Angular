@@ -3,20 +3,31 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, filter } from 'rxjs';
 import { Competencia } from '../models/movimento';
+import { MESES, ANOS } from '../models/competencia-opcoes';
 @Component({
   selector: 'app-competencia-filter',
   imports: [ReactiveFormsModule],
   template: ` <form [formGroup]="form" class="filter-form" (ngSubmit)="emit()">
     <label for="filtroMes"
-      >Mês<input id="filtroMes" type="number" formControlName="mes" min="1" max="12"
-    /></label>
+      >Mês<select id="filtroMes" formControlName="mes">
+        @for (mes of meses; track mes) {
+          <option [ngValue]="mes">{{ mes.toString().padStart(2, '0') }}</option>
+        }
+      </select></label
+    >
     <label for="filtroAno"
-      >Ano<input id="filtroAno" type="number" formControlName="ano" min="1" max="9999"
-    /></label>
+      >Ano<select id="filtroAno" formControlName="ano">
+        @for (ano of anos; track ano) {
+          <option [ngValue]="ano">{{ ano }}</option>
+        }
+      </select></label
+    >
     <button type="submit" class="secondary" [disabled]="form.invalid">Atualizar</button>
   </form>`,
 })
 export class CompetenciaFilter implements OnInit {
+  readonly meses = MESES;
+  readonly anos = ANOS;
   private readonly fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
   @Input({ required: true }) set competencia(value: Competencia) {

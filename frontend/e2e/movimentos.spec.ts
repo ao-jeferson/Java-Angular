@@ -13,21 +13,23 @@ test('login, inclusão, consulta e logout com API/H2 reais', async ({ page }) =>
   await login(page);
   await expect(page.getByLabel('Descrição', { exact: true })).toBeDisabled();
   await page.getByRole('button', { name: 'Novo', exact: false }).click();
-  await page.locator('#mes').fill('2');
-  await page.locator('#ano').fill('2019');
+  await page.locator('#mes').selectOption({ label: '02' });
+  await page.locator('#ano').selectOption({ label: '2019' });
   await page.getByLabel('Produto', { exact: true }).selectOption('P001');
   await page.getByLabel('Cosif', { exact: true }).selectOption('11111111111');
   await page.getByLabel('Valor (R$)').fill('9999999999999999,99');
   await page.getByLabel('Descrição', { exact: true }).fill('Movimento ponta a ponta');
   await page.getByRole('button', { name: 'Incluir movimento' }).click();
-  await expect(page.getByRole('status').filter({ hasText: 'incluído' })).toContainText('incluído com sucesso');
+  await expect(page.getByRole('status').filter({ hasText: 'incluído' })).toContainText(
+    'incluído com sucesso',
+  );
   await expect(page.getByLabel('Descrição', { exact: true })).toBeDisabled();
   await expect(page.getByRole('cell', { name: 'Movimento ponta a ponta' })).toBeVisible();
   await expect(page.getByRole('cell', { name: 'R$ 9.999.999.999.999.999,99' })).toBeVisible();
   await page.screenshot({ path: 'test-results/movimento-desktop.png', fullPage: true });
-  await page.locator('#filtroMes').fill('3');
+  await page.locator('#filtroMes').selectOption({ label: '03' });
   await expect(page.getByRole('heading', { name: 'Nenhum movimento por aqui' })).toBeVisible();
-  await page.locator('#filtroMes').fill('2');
+  await page.locator('#filtroMes').selectOption({ label: '02' });
   await expect(page.getByRole('cell', { name: 'Movimento ponta a ponta' })).toBeVisible();
   await page.getByRole('button', { name: 'Sair' }).click();
   await expect(page).toHaveURL(/login/);
@@ -83,4 +85,30 @@ test('layout móvel e sessão expirada', async ({ page }) => {
   );
   await page.getByRole('button', { name: 'Atualizar', exact: true }).click();
   await expect(page).toHaveURL(/login/);
+});
+
+test('mês e ano são listas numéricas e valor bloqueia letras e colagem inválida', async ({
+  page,
+}) => {
+  await login(page);
+  await page.getByRole('button', { name: 'Novo', exact: false }).click();
+  for (const id of ['mes', 'ano', 'filtroMes', 'filtroAno']) {
+    await expect(page.locator(`#${id}`)).toHaveJSProperty('tagName', 'SELECT');
+  }
+  await expect(page.locator('#mes option')).toHaveCount(12);
+  await page.locator('#ano').selectOption({ label: '2025' });
+  const valor = page.getByLabel('Valor (R$)');
+  await valor.pressSequentially('abc1e2xyz,34');
+  await expect(valor).toHaveValue('12,34');
+  await valor.evaluate((input) => {
+    const clipboard = new DataTransfer();
+    clipboard.setData('text/plain', 'abc999');
+    const accepted = input.dispatchEvent(
+      new ClipboardEvent('paste', { clipboardData: clipboard, bubbles: true, cancelable: true }),
+    );
+    if (accepted) throw new Error('Colagem alfabética foi aceita.');
+  });
+  await expect(valor).toHaveValue('12,34');
+  await valor.fill('-123,45');
+  await expect(valor).toHaveValue('-123,45');
 });
