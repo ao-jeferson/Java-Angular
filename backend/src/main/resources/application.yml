@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: movimento
+  profiles:
+    default: local
+  cloud:
+    config:
+      enabled: false
+  datasource:
+    url: jdbc:h2:file:./data/movimento;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: ${MOVIMENTO_DB_PASSWORD:}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+server:
+  address: 127.0.0.1
+  port: 8080
+  error:
+    include-message: never
+    include-stacktrace: never
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+movimento:
+  message: Ambiente local
+  zone: America/Sao_Paulo
+  auth:
+    username: ${MOVIMENTO_USERNAME:admin}
+    password: ${MOVIMENTO_PASSWORD}
+    issuer: movimento
+    audience: movimento-api
+    ttl: PT15M

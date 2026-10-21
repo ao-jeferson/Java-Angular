@@ -147,3 +147,13 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# Movimento
+**/target/
+**/.angular/
+**/data/
+**/test-results/
+**/playwright-report/
+.DS_Store
+*.pdf
+.runtime/

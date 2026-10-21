@@ -1,0 +1,17 @@
+server:
+  address: 127.0.0.1
+  port: 8888
+spring:
+  application:
+    name: movimento-config-server
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/config/
+  security:
+    user:
+      name: ${CONFIG_SERVER_USERNAME:config}
+      password: ${CONFIG_SERVER_PASSWORD}
