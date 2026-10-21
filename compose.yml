@@ -1,0 +1,19 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "${MOVIMENTO_BIND_ADDRESS:-127.0.0.1}:${MOVIMENTO_PORT:-8083}:8083"
+    environment:
+      MOVIMENTO_USERNAME: ${MOVIMENTO_USERNAME:-admin}
+      MOVIMENTO_PASSWORD: ${MOVIMENTO_PASSWORD:?Configure a senha no arquivo .env}
+      MOVIMENTO_CORS_ORIGINS: ${MOVIMENTO_CORS_ORIGINS:-http://127.0.0.1:4200,http://localhost:4200}
+    volumes:
+      - movimento-data:/app/data
+    mem_limit: 512m
+    memswap_limit: 512m
+    cpus: 1
+volumes:
+  movimento-data:

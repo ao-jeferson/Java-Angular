@@ -13,7 +13,7 @@ import { CompetenciaFilter } from '../components/competencia-filter';
   selector: 'app-movimentos-page',
   imports: [MovimentoForm, MovimentosGrid, CompetenciaFilter],
   template: ` <header class="topbar">
-      <a class="wordmark" href="/">M<span>↗</span> Movimento</a>
+      <a class="wordmark" href="#/movimentos">M<span>↗</span> Movimento</a>
       <div class="topbar-actions">
         <span class="session-badge">● Sessão protegida</span
         ><button class="text-button" (click)="auth.logout()">Sair ↗</button>

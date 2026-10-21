@@ -9,7 +9,7 @@ import { apiError } from '../auth/api-error';
   imports: [ReactiveFormsModule],
   template: ` <main class="login-shell">
     <section class="login-story">
-      <a class="wordmark" href="/">M<span>↗</span> Movimento</a>
+      <a class="wordmark" href="#/movimentos">M<span>↗</span> Movimento</a>
       <div>
         <p class="eyebrow">CONTROLE COM CLAREZA</p>
         <h1>Cada movimento.<br />Todo o controle.</h1>

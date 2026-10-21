@@ -1,0 +1,51 @@
+name: Publicar site
+on:
+  workflow_run:
+    workflows: ['Testes']
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  deploy:
+    if: (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success') && vars.API_URL != ''
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.publish.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '26.9.0'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Configurar endereço da API
+        env:
+          API_URL: ${{ vars.API_URL }}
+        run: |
+          node --input-type=module <<'JS'
+          import {writeFileSync} from 'node:fs';
+          const url = new URL(process.env.API_URL);
+          if (url.protocol !== 'https:') throw new Error('API_URL deve usar HTTPS.');
+          writeFileSync('frontend/public/config.js', 'window.MOVIMENTO_API_URL = '+JSON.stringify(url.origin)+';\n');
+          JS
+      - working-directory: frontend
+        run: |
+          npm ci
+          npm run build -- --base-href "/${GITHUB_REPOSITORY#*/}/"
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/dist/movimento/browser
+      - name: Publicar
+        id: publish
+        uses: actions/deploy-pages@v4

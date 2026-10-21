@@ -4,6 +4,12 @@ Aplicação de movimentos manuais com **Java 25 (LTS), Spring Boot, Angular, H2,
 
 Permite consultar por mês/ano e incluir lançamentos com Produto e Cosif relacionados. O servidor gera número sequencial por competência, data/hora e usuário fixo `TESTE`. Após incluir, a tela atualiza a consulta e desabilita os campos.
 
+## Aplicação online
+
+Site: https://ao-jeferson.github.io/Java-Angular/
+
+A interface é publicada no GitHub Pages e utiliza a API HTTPS hospedada em servidor Ubuntu próprio. A variável `API_URL` do repositório define o endereço da API. O workflow publica o site após os testes da `main` passarem.
+
 ## Requisitos
 
 - Java 25 (LTS)
@@ -49,6 +55,18 @@ O primeiro início da API cria um arquivo `.env` na raiz com essas credenciais. 
 
 O banco H2 é criado em `backend/data/` ao usar o script e mantém os lançamentos após reiniciar. Produtos e Cosifs de demonstração são cadastrados automaticamente. Pare os processos com `Ctrl+C` em cada terminal.
 
+## Backend em servidor próprio
+
+O frontend fica no GitHub Pages; a API Java roda em um servidor Ubuntu próprio. A comunicação usa HTTPS através de Cloudflare Tunnel, e o banco H2 permanece em um volume persistente no servidor.
+
+Para executar a API com Docker, configure o `.env` e rode na raiz:
+
+```bash
+docker compose up -d --build
+```
+
+A API escuta em `127.0.0.1:8083` por padrão. `MOVIMENTO_CORS_ORIGINS` deve conter a origem autorizada do frontend, por exemplo `https://ao-jeferson.github.io`. O túnel publica somente a API, sem expor portas adicionais do servidor.
+
 ## Testes
 
 Com Java 25 disponível no terminal:
@@ -75,7 +93,7 @@ Os testes de navegador iniciam API e frontend próprios nas portas `18083` e `14
 ## Estrutura
 
 ```text
-backend/src/main/java/br/com/antlia/movimento/
+backend/src/main/java/com/movimento/app/
   controller/    # Endpoints REST
   service/       # Regras e transações
   repository/    # Acesso ao banco
@@ -118,7 +136,7 @@ As rotas de negócio exigem `Authorization: Bearer <accessToken>`. Exemplo do co
 }
 ```
 
-Valores monetários e números de lançamento são strings no JSON para preservar precisão. A interface aceita vírgula ou ponto decimal, sem separador de milhar. São permitidos zero e valores negativos dentro dos limites do banco.
+Valores monetários e números de lançamento são strings no JSON para preservar precisão. A interface aceita vírgula ou ponto decimal, sem separador de milhar, e bloqueia letras e colagens inválidas. Mês e ano são selecionados em listas; os anos vão de 1900 até dez anos à frente do ano atual. São permitidos zero e valores negativos dentro dos limites do banco.
 
 O JWT dura 15 minutos e fica somente na memória do navegador. Atualizar a página ou reiniciar a API exige novo login. A senha não é versionada; seu hash BCrypt é mantido em memória. O usuário autenticado controla o acesso, enquanto `COD_USUARIO` continua `TESTE`, conforme o enunciado.
 

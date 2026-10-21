@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../services/api-url';
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -10,12 +11,13 @@ interface TokenResponse {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
+  private readonly apiBase = inject(API_BASE_URL);
   private readonly router = inject(Router);
   readonly token = signal<string | null>(null);
   private expiresAt = 0;
   private timer?: ReturnType<typeof setTimeout>;
   login(username: string, password: string) {
-    return this.http.post<TokenResponse>('/api/v1/auth/login', { username, password }).pipe(
+    return this.http.post<TokenResponse>(`${this.apiBase}/auth/login`, { username, password }).pipe(
       tap((response) => {
         this.clear();
         this.token.set(response.accessToken);

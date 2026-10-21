@@ -1,0 +1,11 @@
+.git
+.env
+.env.*
+*.pdf
+.arquitetura
+.runtime
+frontend
+**/target
+**/data
+**/node_modules
+**/.angular
