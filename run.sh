@@ -3,8 +3,8 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 # Homebrew installs this JDK separately; other environments can use JAVA_HOME.
-if [[ -z "${JAVA_HOME:-}" && -d /opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home ]]; then
-  export JAVA_HOME=/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home
+if [[ -z "${JAVA_HOME:-}" && -d /opt/homebrew/opt/openjdk@25/libexec/openjdk.jdk/Contents/Home ]]; then
+  export JAVA_HOME=/opt/homebrew/opt/openjdk@25/libexec/openjdk.jdk/Contents/Home
 fi
 if [[ -n "${JAVA_HOME:-}" ]]; then export PATH="$JAVA_HOME/bin:$PATH"; fi
 
@@ -14,7 +14,7 @@ if [[ "${1:-backend}" == frontend ]]; then
 fi
 
 if [[ ! -f .env ]]; then
-  (umask 077; printf 'MOVIMENTO_USERNAME=admin\nMOVIMENTO_PASSWORD=%s\nCONFIG_SERVER_PASSWORD=%s\n' "$(openssl rand -hex 24)" "$(openssl rand -hex 24)" > .env)
+  (umask 077; printf 'MOVIMENTO_USERNAME=admin\nMOVIMENTO_PASSWORD=%s\nCONFIG_SERVER_PASSWORD=%s\n' "Movimento@2026" "$(openssl rand -hex 24)" > .env)
   echo 'Credenciais locais criadas no arquivo .env.'
 fi
 set -a

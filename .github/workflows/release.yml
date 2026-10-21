@@ -24,4 +24,4 @@ jobs:
         run: >-
           gh release create "$GITHUB_REF_NAME" release/*
           --title "Movimento $GITHUB_REF_NAME"
-          --notes "Movimento: Java 21, Spring Boot, Angular, H2, Hibernate e JWT. Inclui API, interface compilada e Config Server opcional. Consulte o README para executar."
+          --notes "Movimento: Java 25 (LTS), Spring Boot, Angular, H2, Hibernate e JWT. Inclui API, interface compilada e Config Server opcional. Consulte o README para executar."

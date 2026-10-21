@@ -1,16 +1,16 @@
 # Movimento
 
-Aplicação de movimentos manuais com **Java 21, Spring Boot, Angular, H2, Hibernate e JWT**.
+Aplicação de movimentos manuais com **Java 25 (LTS), Spring Boot, Angular, H2, Hibernate e JWT**.
 
 Permite consultar por mês/ano e incluir lançamentos com Produto e Cosif relacionados. O servidor gera número sequencial por competência, data/hora e usuário fixo `TESTE`. Após incluir, a tela atualiza a consulta e desabilita os campos.
 
 ## Requisitos
 
-- Java 21
+- Java 25 (LTS)
 - Node.js 26 e npm
 - Git
 
-O Maven é baixado pelo wrapper incluído no projeto. No macOS com Homebrew, instale Java com `brew install openjdk@21`. O script de execução reconhece essa instalação automaticamente.
+O Maven é baixado pelo wrapper incluído no projeto. No macOS com Homebrew, instale Java com `brew install openjdk@25`. O script de execução reconhece essa instalação automaticamente.
 
 ## Executar
 
@@ -36,13 +36,22 @@ No segundo terminal, execute a interface:
 bash run.sh frontend
 ```
 
-Acesse **http://127.0.0.1:4200**. O primeiro início da API cria um arquivo `.env` na raiz com `MOVIMENTO_USERNAME` e `MOVIMENTO_PASSWORD`. Use esses valores na tela de login. Para alterar a senha, edite esse arquivo e reinicie a API.
+Acesse **http://127.0.0.1:4200**.
+
+Credenciais de demonstração para execução local:
+
+| Campo | Valor |
+| --- | --- |
+| Usuário | `admin` |
+| Senha | `Movimento@2026` |
+
+O primeiro início da API cria um arquivo `.env` na raiz com essas credenciais. Para personalizar o acesso, altere `MOVIMENTO_USERNAME` e `MOVIMENTO_PASSWORD` nesse arquivo e reinicie a API. Um `.env` existente é preservado. As credenciais acima são exclusivas da demonstração local.
 
 O banco H2 é criado em `backend/data/` ao usar o script e mantém os lançamentos após reiniciar. Produtos e Cosifs de demonstração são cadastrados automaticamente. Pare os processos com `Ctrl+C` em cada terminal.
 
 ## Testes
 
-Com Java 21 disponível no terminal:
+Com Java 25 disponível no terminal:
 
 ```bash
 ./mvnw verify
@@ -57,7 +66,7 @@ npm run test:e2e
 No macOS, se necessário, configure o JDK antes dos testes:
 
 ```bash
-export JAVA_HOME=/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home
+export JAVA_HOME=/opt/homebrew/opt/openjdk@25/libexec/openjdk.jdk/Contents/Home
 export PATH="$JAVA_HOME/bin:$PATH"
 ```
 
