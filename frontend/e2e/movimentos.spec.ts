@@ -20,7 +20,7 @@ test('login, inclusão, consulta e logout com API/H2 reais', async ({ page }) =>
   await page.getByLabel('Valor (R$)').fill('9999999999999999,99');
   await page.getByLabel('Descrição', { exact: true }).fill('Movimento ponta a ponta');
   await page.getByRole('button', { name: 'Incluir movimento' }).click();
-  await expect(page.getByRole('status')).toContainText('incluído com sucesso');
+  await expect(page.getByRole('status').filter({ hasText: 'incluído' })).toContainText('incluído com sucesso');
   await expect(page.getByLabel('Descrição', { exact: true })).toBeDisabled();
   await expect(page.getByRole('cell', { name: 'Movimento ponta a ponta' })).toBeVisible();
   await expect(page.getByRole('cell', { name: 'R$ 9.999.999.999.999.999,99' })).toBeVisible();
@@ -65,7 +65,7 @@ test('falha na consulta após salvar não reenvia o movimento', async ({ page })
     }),
   );
   await page.getByRole('button', { name: 'Incluir movimento' }).click();
-  await expect(page.getByRole('status')).toContainText('incluído');
+  await expect(page.getByRole('status').filter({ hasText: 'incluído' })).toContainText('incluído');
   await expect(page.getByRole('alert')).toContainText('Consulta indisponível');
   await expect(page.getByRole('button', { name: 'Incluir movimento' })).toBeDisabled();
 });
