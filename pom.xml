@@ -7,9 +7,9 @@
     <version>4.1.1</version>
     <relativePath/>
   </parent>
-  <groupId>br.com.antlia</groupId>
+  <groupId>com.movimento</groupId>
   <artifactId>movimento-parent</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
   <packaging>pom</packaging>
   <name>Movimento</name>
   <modules>

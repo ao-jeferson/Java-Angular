@@ -32,8 +32,8 @@ jobs:
       - name: Preparar arquivos da aplicação
         run: |
           mkdir release
-          cp backend/target/movimento-1.0.0.jar release/Movimento-backend.jar
-          cp config-server/target/movimento-config-server-1.0.0.jar release/Movimento-config-server.jar
+          cp backend/target/movimento-1.1.0.jar release/Movimento-backend.jar
+          cp config-server/target/movimento-config-server-1.1.0.jar release/Movimento-config-server.jar
           tar -czf release/Movimento-frontend.tar.gz -C frontend/dist/movimento/browser .
           cp README.md release/
       - uses: actions/upload-artifact@v7.0.2

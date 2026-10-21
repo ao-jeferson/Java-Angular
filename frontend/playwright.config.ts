@@ -14,7 +14,7 @@ export default defineConfig({
   webServer: [
     {
       command:
-        'java -jar ../backend/target/movimento-1.0.0.jar --server.port=18080 --movimento.cors.origins=http://127.0.0.1:14200 "--spring.datasource.url=jdbc:h2:mem:e2e;DB_CLOSE_DELAY=-1" --logging.level.root=WARN',
+        'java -jar ../backend/target/movimento-1.1.0.jar --server.port=18080 --movimento.cors.origins=http://127.0.0.1:14200 "--spring.datasource.url=jdbc:h2:mem:e2e;DB_CLOSE_DELAY=-1" --logging.level.root=WARN',
       url: 'http://127.0.0.1:18080/actuator/health',
       timeout: 90000,
       reuseExistingServer: false,

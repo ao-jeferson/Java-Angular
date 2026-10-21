@@ -18,6 +18,7 @@ spring:
   jackson:
     deserialization:
       fail-on-unknown-properties: true
+      accept-float-as-int: false
 server:
   address: 127.0.0.1
   port: 8083
