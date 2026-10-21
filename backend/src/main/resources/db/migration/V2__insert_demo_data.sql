@@ -1,0 +1,4 @@
+INSERT INTO PRODUTO VALUES ('P001','Renda fixa','A'),('P002','Fundos de investimento','A'),('P003','Operações de crédito','A');
+INSERT INTO PRODUTO_COSIF VALUES
+ ('P001','11111111111','000001','A'),('P001','11111111112','000002','A'),
+ ('P002','22222222222','000003','A'),('P003','33333333333','000004','A');
